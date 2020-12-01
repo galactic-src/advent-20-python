@@ -1,10 +1,7 @@
-import collections
-from enum import Enum, auto
 import math
-import re
-from itertools import combinations, accumulate
+from itertools import combinations
 
-from util import ManyLineInput, OneLineInput, windowed
+from util import ManyLineInput
 
 
 def solve(inputs, count):
