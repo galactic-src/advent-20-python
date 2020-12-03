@@ -83,8 +83,8 @@ class Gate:
         return int(inpt) if inpt.isnumeric() else inpt
 
 
-def process_gates(gates):
-    resolved = dict()
+def process_gates(gates, resolved=None):
+    resolved = resolved or dict()
     inputs = collections.defaultdict(list)
 
     for g in gates:
@@ -93,7 +93,7 @@ def process_gates(gates):
                 inputs[i.tok].append(g)
     print(inputs)
 
-    newly_resolved = [g for g in gates if all([i.available(resolved) for i in g.inputs])]
+    newly_resolved = [g for g in gates if all([i.available(resolved) for i in g.inputs]) and g.output not in resolved]
     while len(newly_resolved):
         resolved_gate = newly_resolved.pop()
         resolved[resolved_gate.output] = resolved_gate.output_value(resolved)
@@ -112,13 +112,12 @@ def part1():
 
 
 def part2():
-    with ManyLineInput('./input.txt') as data:
+    with ManyLineInput('./input.txt', Gate) as data:
         round1 = process_gates(data)
-        data.remove()
-        answer = ''
-        print(f"part 2: {answer}")
+        round2 = process_gates(data, {'b': round1})
+        print(f"part 2: {round2}")
 
 if __name__ == "__main__":
     part1()
-    # part2()
+    part2()  # 7363 too low
 

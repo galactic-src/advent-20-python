@@ -28,7 +28,7 @@ class ManyLineInput:
         self.file.__enter__()
         lines = self.file.readlines()
         if self.cons is None:
-            return lines
+            return [s.rstrip('\n') for s in lines]
         else:
             return [self.cons(s.rstrip('\n')) for s in lines]
 
