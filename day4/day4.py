@@ -2,26 +2,21 @@ import re
 
 from util import DelimitedLinesBlockInput
 
-HEIGHT_REGEX = re.compile('^([0-9]+)(cm|in)$')
+HEIGHT_REGEX = re.compile(r'^(\d+)(cm|in)$')
 def valid_height(height):
     m = HEIGHT_REGEX.fullmatch(height)
     if m is None:
         return False
 
-    try:
-        n = int(m.group(1))
-    except:
-        return False
-
     if m.group(2) == 'cm':
-        return 150 <= n <= 193
+        return int_between(m.group(1), 150, 193)
     elif m.group(2) == 'in':
-        return 59 <= n <= 76
+        return int_between(m.group(1), 59, 76)
     else:
         return False
 
 
-HCL_REG = re.compile('#[0-9a-f]{6}')
+HCL_REG = re.compile(r'#[\da-f]{6}')
 def valid_hcl(hcl):
     return HCL_REG.fullmatch(hcl) is not None
 
@@ -30,7 +25,7 @@ def valid_ecl(ecl):
     return ecl in {'amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'}
 
 
-def year_between(yr, lo, hi):
+def int_between(yr, lo, hi):
     try:
         yr = int(yr)
         return lo <= yr <= hi
@@ -38,20 +33,20 @@ def year_between(yr, lo, hi):
         return False
 
 
-PID_REG=re.compile('[0-9]{9}')
+PID_REG=re.compile(r'\d{9}')
 def valid_pid(pid):
     return PID_REG.fullmatch(pid) is not None
 
 
 def fields_valid(passports):
     fields = {field[0]: field[1] for field in passports}
-    return year_between(fields['byr'], 1920, 2002) \
-        and year_between(fields['iyr'], 2010, 2020) \
-        and year_between(fields['eyr'], 2020, 2030) \
-        and valid_height(fields['hgt']) \
-        and valid_hcl(fields['hcl']) \
-        and valid_ecl(fields['ecl']) \
-        and valid_pid(fields['pid'])
+    return int_between(fields['byr'], 1920, 2002) \
+           and int_between(fields['iyr'], 2010, 2020) \
+           and int_between(fields['eyr'], 2020, 2030) \
+           and valid_height(fields['hgt']) \
+           and valid_hcl(fields['hcl']) \
+           and valid_ecl(fields['ecl']) \
+           and valid_pid(fields['pid'])
 
 
 def keys_valid(passport):
