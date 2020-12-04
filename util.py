@@ -1,4 +1,5 @@
 from itertools import tee
+from more_itertools import split_at
 
 class OneLineInput:
     def __init__(self, input_path):
@@ -31,6 +32,22 @@ class ManyLineInput:
             return [s.rstrip('\n') for s in lines]
         else:
             return [self.cons(s.rstrip('\n')) for s in lines]
+
+    def __exit__(self, exc_type, value, traceback):
+        self.file.__exit__(exc_type, value, traceback)
+
+class DelimitedLinesBlockInput:
+    def __init__(self, input_path, cons=None):
+        self.input_path = input_path
+        self.file = None
+        self.cons = cons
+
+    def __enter__(self):
+        self.file = open(self.input_path)
+        self.file.__enter__()
+        lines = self.file.readlines()
+        blocks = list(split_at([s.rstrip('\n') for s in lines], lambda l: l == ""))
+        return blocks if self.cons is None else map(lambda b: self.cons(b), blocks)
 
     def __exit__(self, exc_type, value, traceback):
         self.file.__exit__(exc_type, value, traceback)
