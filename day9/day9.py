@@ -4,10 +4,8 @@ from util import ManyLineInput, OneLineInput, windowed
 
 
 def first_invalid(numbers):
-    for ix, num in enumerate(numbers[25:]):
-        valid = {a+b for a, b in combinations(numbers[ix:25+ix], 2)}
-        if num not in valid:
-            return num
+    invalids = [w[25] for w in windowed(numbers, 26) if w[25] not in {a+b for a, b in combinations(w[:25], 2)}]
+    return invalids[0]
 
 
 def part1():
@@ -31,4 +29,4 @@ def part2():
 
 if __name__ == "__main__":
     part1()
-    part2()  # not 392787701, 335659080 too high
+    part2()

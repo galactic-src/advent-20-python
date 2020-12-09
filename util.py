@@ -79,3 +79,7 @@ def p(o):
 
 def plist(o):
     return p(list(o))
+
+
+def first(cond, it):
+    return next(filter(cond, it))
