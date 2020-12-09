@@ -1,6 +1,7 @@
 from itertools import tee
 from more_itertools import split_at
 
+
 class OneLineInput:
     def __init__(self, input_path):
         self.input_path = input_path
@@ -36,6 +37,7 @@ class ManyLineInput:
     def __exit__(self, exc_type, value, traceback):
         self.file.__exit__(exc_type, value, traceback)
 
+
 class DelimitedLinesBlockInput:
     def __init__(self, input_path, cons=None):
         self.input_path = input_path
@@ -59,3 +61,21 @@ def windowed(iterable, size):
         for each in iters[i:]:
             next(each, None)
     return zip(*iters)
+
+
+def partitions(n, total):
+    if n == 1:
+        yield (total,)
+    else:
+        for num in range(total+1):
+            for partition in [(num, *p) for p in partitions(n-1, total-num)]:
+                yield partition
+
+
+def p(o):
+    print(o)
+    return o
+
+
+def plist(o):
+    return p(list(o))

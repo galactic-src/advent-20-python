@@ -7,15 +7,15 @@ from util import ManyLineInput, OneLineInput, windowed
 
 
 def part1():
-    # with ManyLineInput('./input.txt') as data:
-    with OneLineInput('./input.txt') as data:
+    with ManyLineInput('./input.txt') as data:
+    # with OneLineInput('./input.txt') as data:
         answer = ''
         print(f"part 1: {answer}")
 
 
 def part2():
-    # with ManyLineInput('./input.txt') as data:
-    with OneLineInput('./input.txt') as data:
+    with ManyLineInput('./input.txt') as data:
+    # with OneLineInput('./input.txt') as data:
         answer = ''
         print(f"part 2: {answer}")
 

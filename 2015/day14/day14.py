@@ -33,9 +33,9 @@ class Race:
     def winning_distance(self):
         return max(self.results().values())
 
-    def winner(self):
-        if
-        return sorted(self.results().items(), key=lambda el: el[1], reverse=True)[0][0]
+    def winners(self):
+        max_distance = max(map(lambda res: res[1], self.results().items()))
+        return [res[0] for res in self.results().items() if res[1] == max_distance]
 
 
 def part1():
@@ -46,7 +46,7 @@ def part1():
 
 def part2():
     with ManyLineInput('./input.txt', Reindeer) as data:
-        winners = [Race(data, t).winner() for t in range(1, 2503 + 2)]
+        winners = [winner for t in range(1, 2503 + 2) for winner in Race(data, t).winners()]
         c = Counter(winners)
         answer = max(c.values())
         print(f"part 2: {answer}")
