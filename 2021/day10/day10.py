@@ -1,40 +1,75 @@
-import collections
-from enum import Enum, auto
-import re
-from itertools import combinations, accumulate
+from collections import Counter
 
-from util import ManyLineInput, OneLineInput, windowed
+from util import ManyLineInput
+
+pairs = {
+    '(': ')',
+    '[': ']',
+    '{': '}',
+    '<': '>'
+}
+
+illegalPoints = {
+    ')': 3,
+    ']': 57,
+    '}': 1197,
+    '>': 25137
+}
+
+autoPoints = {
+    '(': 1,
+    '[': 2,
+    '{': 3,
+    '<': 4
+}
 
 
-class ClassyClass:
-    def __init__(self, s):
-        pass
-        #s = s.rstrip('.')
-        #self.container, remainder = s.split(' contain ')
-        #self.container = self.container[:-1]  # strip s
-        #self.targets = [t.split(' ', 1) for t in remainder.split(', ')] if remainder != 'no other bags' else []
-        #for target in self.targets:
-        #    target[0] = int(target[0])
-        #    if target[1].endswith('s'):
-        #        target[1] = target[1][:-1]
+def first_illegal(s):
+    stack = []
+    for c in s:
+        if c in pairs.keys():
+            stack.append(c)
+        elif c in pairs.values():
+            opener = stack.pop()
+            if c != pairs[opener]:
+                return c
+    return None
+
+
+def autocomplete_score(s):
+    stack = []
+    for c in s:
+        if c in pairs.keys():
+            stack.append(c)
+        elif c in pairs.values():
+            opener = stack.pop()
+            if c != pairs[opener]:
+                raise Exception("oops")
+
+    score = 0
+    for opener in stack[::-1]:
+        score *= 5
+        score += autoPoints[opener]
+
+    return score
 
 
 def part1():
     with ManyLineInput('./input.txt') as data:
-    #  with OneLineInput('./input.txt') as data:
-        answer = ''
-        print(f"part 1: {answer}")
+        c = Counter(first_illegal(s) for s in data)
+        total = sum(c[close] * illegalPoints[close] for close in illegalPoints.keys())
+        print(f"part 1: {total}")
 
 
 def part2():
     with ManyLineInput('./input.txt') as data:
-    # with OneLineInput('./input.txt') as data:
-        answer = ''
+        scores = sorted([autocomplete_score(s) for s in data if first_illegal(s) is None])
+
+        answer = scores[len(scores)//2]
         print(f"part 2: {answer}")
 
 
 if __name__ == "__main__":
-    pass
-    # part1()
-    # part2()
+    part1()
+    part2()
 
