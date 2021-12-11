@@ -1,16 +1,17 @@
-import collections
-from enum import Enum, auto
-import re
-from itertools import combinations, accumulate
+from util import ManyLineInput
 
-from util import ManyLineInput, OneLineInput, windowed, DelimitedLinesBlockInput
+
+adjacent = [(0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1)]
+
 
 def with_border(lines, border_val):
     width = len(lines[0])
-    return [(width + 2) * [border_val]] + [[border_val] + [int(energy) for energy in line] + [border_val] for line in lines] + [(width + 2) * [border_val]]
+    return ([(width + 2) * [border_val]]
+            + [[border_val] + [int(energy) for energy in line] + [border_val] for line in lines]
+            + [(width + 2) * [border_val]])
 
 
-class Grid():
+class Grid:
     def __init__(self):
         with ManyLineInput('./input.txt') as data:
             self.grid = with_border(data, 0)
@@ -24,7 +25,7 @@ class Grid():
         for y in range(1, len(self.grid) - 1):
             for x in range(1, len(self.grid[0]) - 1):
                 if (x, y) not in flashed and self.grid[y][x] > 9:
-                    for adjX, adjY in [(x + diffX, y + diffY) for diffX, diffY in [(0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1)]]:
+                    for adjX, adjY in [(x + diffX, y + diffY) for diffX, diffY in adjacent]:
                         self.grid[adjY][adjX] += 1
                     flashed.add((x, y))
                     return True
