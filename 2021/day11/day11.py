@@ -12,7 +12,9 @@ def with_border(lines, border_val):
 
 
 class Grid:
-    def __init__(self):
+    def __init__(self, verbose):
+        self.verbose = verbose
+        self.step_num = 0
         with ManyLineInput('./input.txt') as data:
             self.grid = with_border(data, 0)
 
@@ -46,6 +48,7 @@ class Grid:
                 if self.grid[y][x] > 9:
                     self.grid[y][x] = 0
 
+        self.step_num += 1
         return len(flashed)
 
     def size(self):
@@ -53,29 +56,27 @@ class Grid:
 
 
 def part1():
-    grid = Grid()
+    grid = Grid(False)
 
     flashes = 0
     for stepNum in range(100):
         flashed = grid.step()
-        print(f"STEP {stepNum+1}")
-        grid.print()
         flashes += flashed
+        print(f"STEP {grid.step_num}")
+        grid.print()
 
     print(f"part 1: {flashes}")
 
 
 def part2():
-    grid = Grid()
+    grid = Grid(False)
 
-    step_num = 1
     while True:
         flashed = grid.step()
         if flashed == grid.size():
             break
-        step_num += 1
 
-    print(f"part 2: {step_num}")
+    print(f"part 2: {grid.step_num}")
 
 
 if __name__ == "__main__":
