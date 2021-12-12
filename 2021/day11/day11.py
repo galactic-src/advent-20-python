@@ -19,8 +19,8 @@ class Grid:
             self.grid = with_border(data, 0)
 
     def print(self):
-        for line in self.grid:
-            print(''.join([str(energy) for energy in line]))
+        for line in self.grid[1:-1]:
+            print(''.join([str(energy) for energy in line[1:-1]]))
         print("\n")
 
     def flash_one(self, flashed):
