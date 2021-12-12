@@ -3,51 +3,53 @@ from collections import defaultdict
 from util import ManyLineInput
 
 
-def findPaths(connections, path, visited, next, found_paths, can_revisit, revisited):
-    new_path = list(path)
-    new_visited = set(visited)
-    new_path.append(next)
+class Caves:
+    def __init__(self, lines, can_revisit_small):
+        self.connections = defaultdict(list)
+        for line in lines:
+            start, end = line.split("-")
+            self.connections[start].append(end)
+            self.connections[end].append(start)
+        self.can_revisit_small = can_revisit_small
 
-    if next.islower():
-        new_visited.add(next)
+    def find_all_paths(self):
+        found_paths = []
+        self.find_paths([], {}, "start", found_paths, False)
+        return found_paths
 
-    if next == "end":
-        found_paths.append([step for step in new_path])
-        return
+    def find_paths(self, path, visited, next, found_paths, revisited):
+        new_path = list(path)
+        new_visited = set(visited)
+        new_path.append(next)
 
-    for step in connections[next]:
-        if step not in new_visited:
-            findPaths(connections, new_path, new_visited, step, found_paths, can_revisit, revisited)
-        elif can_revisit and not revisited and step != "start":
-            findPaths(connections, new_path, new_visited, step, found_paths, can_revisit, True)
+        if next.islower():
+            new_visited.add(next)
+
+        if next == "end":
+            found_paths.append([step for step in new_path])
+            return
+
+        for step in self.connections[next]:
+            if step not in new_visited:
+                self.find_paths(new_path, new_visited, step, found_paths, revisited)
+            elif self.can_revisit_small and not revisited and step != "start":
+                self.find_paths(new_path, new_visited, step, found_paths, True)
 
 
 def part1():
     with ManyLineInput('input.txt') as data:
-        connections = defaultdict(list)
-        for line in data:
-            start, end = line.split("-")
-            connections[start].append(end)
-            connections[end].append(start)
+        caves = Caves(data, False)
+        paths = caves.find_all_paths()
 
-        found_paths = []
-        findPaths(connections, [], {}, "start", found_paths, False, False)
-
-        print(f"part 1: {len(found_paths)}")
+        print(f"part 1: {len(paths)}")
 
 
 def part2():
     with ManyLineInput('input.txt') as data:
-        connections = defaultdict(list)
-        for line in data:
-            start, end = line.split("-")
-            connections[start].append(end)
-            connections[end].append(start)
+        caves = Caves(data, True)
+        paths = caves.find_all_paths()
 
-        found_paths = []
-        findPaths(connections, [], {}, "start", found_paths, True, False)
-
-        print(f"part 2: {len(found_paths)}")
+        print(f"part 2: {len(paths)}")
 
 
 if __name__ == "__main__":
