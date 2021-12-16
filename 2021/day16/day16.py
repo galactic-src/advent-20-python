@@ -1,35 +1,16 @@
 import math
 
-from util import OneLineInput
-
-bin_map = {
-    '0': '0000',
-    '1': '0001',
-    '2': '0010',
-    '3': '0011',
-    '4': '0100',
-    '5': '0101',
-    '6': '0110',
-    '7': '0111',
-    '8': '1000',
-    '9': '1001',
-    'A': '1010',
-    'B': '1011',
-    'C': '1100',
-    'D': '1101',
-    'E': '1110',
-    'F': '1111',
-}
+from util import OneLineInput, splits
 
 
 def parse_value(s):
     value_chars = ""
     keep_going = True
     while keep_going:
-        next_chunk = s[0:5]
-        s = s[5:]
-        value_chars += next_chunk[1:]
-        keep_going = next_chunk[0] == '1'
+        next_chunk, s = splits(s, 5)
+        continuation, data = splits(next_chunk, 1)
+        value_chars += data
+        keep_going = continuation == '1'
 
     return s, int(value_chars, 2)
 
@@ -112,7 +93,7 @@ class Packet:
 
 
 def to_bin(s):
-    return "".join(bin_map[c] for c in s)
+    return "".join(format(int(c, 16), '04b') for c in s)
 
 
 def part1():

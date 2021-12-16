@@ -83,3 +83,7 @@ def plist(o):
 
 def first(cond, it):
     return next(filter(cond, it))
+
+
+def splits(s, ix):
+    return s[:ix], s[ix:]
