@@ -1,9 +1,4 @@
-import collections
-from enum import Enum, auto
-import re
-from itertools import combinations, accumulate
-
-from util import ManyLineInput, OneLineInput, windowed, DelimitedLinesBlockInput
+from util import DelimitedLinesBlockInput
 
 
 def wrap(grid, wrap_with):
@@ -26,11 +21,8 @@ def apply_kernel(grid, pattern, step):
     for ixy in range(1, len(grid)-3):
         new_line = []
         for ixx in range(1, len(grid[0])-3):
-            # print(f"({ixx}, {ixy})")
             binary = "".join('1' if grid[y][x] == '#' else '0' for y in range(ixy, ixy+3) for x in range(ixx, ixx+3))
-            # print(binary)
             pattern_ix = int(binary, 2)
-            # print(pattern_ix)
             new_line.append(pattern[pattern_ix])
         new_grid.append(new_line)
 
@@ -38,25 +30,13 @@ def apply_kernel(grid, pattern, step):
     return initial_wrap(new_grid, wrap_with)
 
 
-def print_grid(grid):
-    for line in grid:
-        print("".join(line))
-    print("")
-
-
 def part1():
     with DelimitedLinesBlockInput('./input.txt') as data:
         pattern = data[0][0]
         grid = initial_wrap([[c for c in s] for s in data[1]], '.')
-        print_grid(grid)
-
         grid = apply_kernel(grid, pattern, 0)
-        print_grid(grid)
-
         grid = apply_kernel(grid, pattern, 1)
-        print_grid(grid)
 
-        # 5747 high
         print(f"part 1: {count_lit(grid)}")
 
 
@@ -64,12 +44,9 @@ def part2():
     with DelimitedLinesBlockInput('./input.txt') as data:
         pattern = data[0][0]
         grid = initial_wrap([[c for c in s] for s in data[1]], '.')
-        print_grid(grid)
 
         for step in range(50):
-            print(f"STEP {step+1}")
             grid = apply_kernel(grid, pattern, step)
-            print_grid(grid)
 
         print(f"part 2: {count_lit(grid)}")
 
